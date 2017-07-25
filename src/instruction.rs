@@ -13,10 +13,10 @@ pub enum Operand {
 impl fmt::Display for Operand {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            Operand::Register(0xf) => write!(f, "I"),
-            Operand::Register(reg) => write!(f, "V{}", reg),
-            Operand::Address(addr) => write!(f, "@0x{:x}", addr),
-            Operand::Literal(lit)  => write!(f, "$0x{:x}", lit)
+            Operand::Register(0xf) => write!(f, "rI"),
+            Operand::Register(reg) => write!(f, "rV{:02x}", reg),
+            Operand::Address(addr) => write!(f, "@0x{:04x}", addr),
+            Operand::Literal(lit)  => write!(f, "$0x{:04x}", lit)
         }
     }
 }
@@ -102,17 +102,31 @@ impl Instruction {
     }
 }
 
+// FIXME: This is arbitrarily the size of "CLEAR_DISPLAY" + 1 for now
+const MAX_MNEMONIC_LEN: usize = 14;
+
 impl fmt::Display for Instruction {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        use std::fmt::Write;
         match self.operands.len() {
-            0 => write!(f, "{}", self.operator.mnemonic),
-            1 => write!(f, "{} {}", self.operator.mnemonic,
-                        self.operands[0]), 
-            2 => write!(f, "{} {},{}", self.operator.mnemonic,
-                        self.operands[0], self.operands[1]), 
-            3 => write!(f, "{} {},{}", self.operator.mnemonic,
-                        self.operands[0], self.operands[1]), 
+            0 => write!(f, "{mnemonic:width$}",
+                        width = MAX_MNEMONIC_LEN,
+                        mnemonic = self.operator.mnemonic),
+            1 => write!(f, "{mnemonic:width$} {oper_x}",
+                        width = MAX_MNEMONIC_LEN,
+                        mnemonic = self.operator.mnemonic,
+                        oper_x = self.operands[0]),
+            2 => write!(f, "{mnemonic:width$} {oper_x},{oper_y}",
+                        width = MAX_MNEMONIC_LEN,
+                        mnemonic = self.operator.mnemonic,
+                        oper_x = self.operands[0],
+                        oper_y = self.operands[1]),
+            3 => write!(f, "{mnemonic:width$} {oper_x},{oper_y},{oper_z}",
+                        width = MAX_MNEMONIC_LEN,
+                        mnemonic = self.operator.mnemonic,
+                        oper_x = self.operands[0],
+                        oper_y = self.operands[1],
+                        oper_z = self.operands[2]),
+
             _ => unimplemented!(),
         }
     }
