@@ -33,7 +33,7 @@ pub struct Instruction {
 #[inline]
 fn get_nibble(src: u16, pos: u8) -> u8 {
     assert!(pos <= 3);
-    ((src & (0xf << pos)) >> pos) as u8
+    ((src & (0xf << pos*4)) >> pos*4) as u8
 }
 
 impl Instruction {

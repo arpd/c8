@@ -12,6 +12,7 @@ fn test(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {}
 //                        registers, and a 4 bit literal
 #[inline]
 pub fn decode_addr12(src: u16) -> Operator {
+    unimplemented!();
     Operator {
         mnemonic: "TEST",
         implementation: test
@@ -19,6 +20,7 @@ pub fn decode_addr12(src: u16) -> Operator {
 }
 #[inline]
 pub fn decode_regx_addr8(src: u16) -> Operator {
+    unimplemented!();
     Operator {
         mnemonic: "TEST",
         implementation: test
@@ -27,6 +29,7 @@ pub fn decode_regx_addr8(src: u16) -> Operator {
 
 #[inline]
 pub fn decode_regx_regy(src: u16) -> Operator {
+    unimplemented!();
     Operator {
         mnemonic: "TEST",
         implementation: test
@@ -34,6 +37,7 @@ pub fn decode_regx_regy(src: u16) -> Operator {
 }
 
 #[inline] pub fn decode_regx_regy_addr4(src: u16) -> Operator {
+    unimplemented!();
     Operator {
         mnemonic: "TEST",
         implementation: test
@@ -42,6 +46,7 @@ pub fn decode_regx_regy(src: u16) -> Operator {
 
 #[inline]
 pub fn decode_regx(src: u16) -> Operator {
+    unimplemented!();
     Operator {
         mnemonic: "TEST",
         implementation: test
