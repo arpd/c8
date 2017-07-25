@@ -13,8 +13,9 @@ pub enum Operand {
 impl fmt::Display for Operand {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
+            Operand::Register(0xf) => write!(f, "I"),
             Operand::Register(reg) => write!(f, "V{}", reg),
-            Operand::Address(addr) => write!(f, "0x{:x}", addr),
+            Operand::Address(addr) => write!(f, "@0x{:x}", addr),
             Operand::Literal(lit)  => write!(f, "$0x{:x}", lit)
         }
     }
