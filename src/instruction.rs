@@ -24,10 +24,10 @@ impl fmt::Display for Operand {
 
 #[derive(Clone)]
 pub struct Instruction {
-    src: u16,
-    operands: Vec<Operand>,
+    pub src: u16,
+    pub operands: Vec<Operand>,
     //operator: fn(operands: &Vec<Operand>, ctxt: &mut Chip8Context),
-    operator: Operator,
+    pub operator: Operator,
 }
 
 // get a nibble (i.e. 4-bit value) from a `u16`, indexed from right to left
@@ -40,8 +40,10 @@ pub fn get_nibble(src: u16, pos: u8) -> u8 {
 
 impl Instruction {
     pub fn new(src: u16) -> Instruction {
-        // First of all, let's extract the operands that this instruction
-        // requires.
+        // TODO: Operand extraction should probably be moved in to the
+        // decoder functions, and have those return a full `Instruction`
+        // instead; We still need to match here to get the correct
+        // decoder anyway, so work done will be identical.
         let mut operands: Vec<Operand> = Vec::<Operand>::new();
         let operator = match get_nibble(src, 3) {
             0 => {
