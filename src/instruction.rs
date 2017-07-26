@@ -32,7 +32,7 @@ pub struct Instruction {
 // get a nibble (i.e. 4-bit value) from a `u16`, indexed from right to left
 // (0..3), `pos = 0` will return `src & 0xf`
 #[inline]
-fn get_nibble(src: u16, pos: u8) -> u8 {
+pub fn get_nibble(src: u16, pos: u8) -> u8 {
     assert!(pos <= 3);
     ((src & (0xf << pos*4)) >> pos*4) as u8
 }

@@ -11,6 +11,13 @@ fn main() {
     println!("{}", i);
     let i = instruction::Instruction::new(0x00ee);
     println!("{}", i);
-    let i = instruction::Instruction::new(0xee00);
+
+    let i = instruction::Instruction::new(0xe09e);
+    println!("{}", i);
+    let i = instruction::Instruction::new(0xe091);
+    println!("{}", i);
+    let i = instruction::Instruction::new(0xe59e);
+    println!("{}", i);
+    let i = instruction::Instruction::new(0xef91);
     println!("{}", i);
 }

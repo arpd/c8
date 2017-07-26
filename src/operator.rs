@@ -30,3 +30,47 @@ pub fn clear_display(ctxt: &mut Chip8Context) {
 pub fn ret(ctxt: &mut Chip8Context) {
     unimplemented!()
 }
+
+pub fn key_neq(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
+    unimplemented!()
+}
+
+pub fn key_eq(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
+    unimplemented!()
+}
+
+pub fn get_delay_timer(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
+    unimplemented!()
+}
+
+pub fn get_key(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
+    unimplemented!()
+}
+
+pub fn set_delay_timer(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
+    unimplemented!()
+}
+
+pub fn set_sound_timer(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
+    unimplemented!()
+}
+
+pub fn add_i(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
+    unimplemented!()
+}
+
+pub fn set_i_sprite_addr(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
+    unimplemented!()
+}
+
+pub fn bcd(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
+    unimplemented!()
+}
+
+pub fn dump_regs(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
+    unimplemented!()
+}
+
+pub fn load_regs(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
+    unimplemented!()
+}
