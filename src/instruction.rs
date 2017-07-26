@@ -2,6 +2,7 @@ use std::fmt;
 use decoder::*;
 use operator::{Operator};
 
+// TODO: We need to support a few more operands here, e.g. composable addresses (I+NNN)
 #[derive(Debug, Clone, Copy)]
 #[allow(dead_code)]
 pub enum Operand {
@@ -78,6 +79,7 @@ impl Instruction {
                 decode_regx_regy(src)
             }
             0xd => {
+                // _XYN
                 let register_x = get_nibble(src, 2);
                 let register_y = get_nibble(src, 1);
                 let literal = get_nibble(src, 0) as u16;
@@ -87,6 +89,7 @@ impl Instruction {
                 decode_regx_regy_addr4(src)
             }
             0xe | 0xf => {
+                // _X__
                 let register_x = get_nibble(src, 2);
                 operands.push(Operand::Register(register_x));
                 decode_regx(src)

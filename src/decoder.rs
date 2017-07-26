@@ -2,45 +2,163 @@ use instruction::{Operand, get_nibble};
 use platform::{Chip8Context};
 use operator::*;
 
-// TODO: Remove when operations & decoders implemented
-fn test(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {}
-
 // The following `decode_XXXXX` functions are named such that they decode an
 // instruction with the operands matching `XXXXX`, for example:
 // `decode_addr12` decodes instructions that provide a 12 bit address,
-// `decode_regx_regy_lit` decodes instructions that provide the X and Y
+// `decode_regx_regy_lit4` decodes instructions that provide the X and Y
 //                        registers, and a 4 bit literal
 #[inline]
 pub fn decode_addr12(src: u16) -> Operator {
-    unimplemented!();
-    Operator {
-        mnemonic: "TEST",
-        implementation: test
+    match get_nibble(src, 3) {
+        0x1 => {
+            Operator {
+                mnemonic: "JMP",
+                implementation: jmp_addr12,
+            }
+        },
+        0x2 => {
+            Operator {
+                mnemonic: "CALL",
+                implementation: call_addr12,
+            }
+        },
+        0xa => {
+            Operator {
+                mnemonic: "MOV",
+                implementation: mov_i_addr12,
+            }
+        },
+        0xb => {
+            Operator {
+                mnemonic: "JMP",
+                implementation: jmp_addr12_offset_regx,
+            }
+        },
+        
+        _ => unimplemented!()
     }
 }
 #[inline]
 pub fn decode_regx_addr8(src: u16) -> Operator {
-    unimplemented!();
-    Operator {
-        mnemonic: "TEST",
-        implementation: test
+    match get_nibble(src, 3) {
+        0x3 => {
+            Operator {
+                mnemonic: "SKIP_EQ",
+                implementation: skip_eq_regx_addr8,
+            }
+        },
+        0x4 => {
+            Operator {
+                mnemonic: "SKIP_NEQ",
+                implementation: skip_neq_regx_addr8,
+            }
+        },
+        0x6 => {
+            Operator {
+                mnemonic: "MOV",
+                implementation: mov_regx_addr8,
+            }
+        },
+        0x7 => {
+            Operator {
+                mnemonic: "ADD",
+                implementation: add_regx_addr8,
+            }
+        },
+        0xc => {
+            Operator {
+                mnemonic: "RAND",
+                implementation: rand_regx_addr8,
+            }
+        },
+        
+        _ => unimplemented!(),
+
     }
 }
 
 #[inline]
 pub fn decode_regx_regy(src: u16) -> Operator {
-    unimplemented!();
-    Operator {
-        mnemonic: "TEST",
-        implementation: test
+    match get_nibble(src, 3) {
+        0x5 => {
+            Operator {
+                mnemonic: "SKIP_EQ",
+                implementation: skip_eq_regx_regy,
+            }
+        },
+        0x8 => {
+            match get_nibble(src, 0) {
+                0x0 => {
+                    Operator {
+                        mnemonic: "MOV",
+                        implementation: mov_regx_regy,
+                    }
+                },
+                0x1 => {
+                    Operator {
+                        mnemonic: "OR",
+                        implementation: or_regx_regy,
+                    }
+                },
+                0x2 => {
+                    Operator {
+                        mnemonic: "AND",
+                        implementation: and_regx_regy,
+                    }
+                },
+                0x3 => {
+                    Operator {
+                        mnemonic: "XOR",
+                        implementation: xor_regx_regy,
+                    }
+                },
+                0x4 => {
+                    Operator {
+                        mnemonic: "ADD",
+                        implementation: add_regx_regy,
+                    }
+                },
+                0x5 => {
+                    Operator {
+                        mnemonic: "SUB",
+                        implementation: sub_regx_regy,
+                    }
+                },
+                0x6 => {
+                    Operator {
+                        mnemonic: "RSHIFT",
+                        implementation: rshift_regx_regy,
+                    }
+                },
+                0x7 => {
+                    Operator {
+                        mnemonic: "SUB",
+                        implementation: sub_regy_regx,
+                    }
+                },
+                0xe => {
+                    Operator {
+                        mnemonic: "LSHIFT",
+                        implementation: lshift_regx_regy,
+                    }
+                },
+                _ => unimplemented!(),
+            }
+        },
+        0x9 => {
+            Operator {
+                mnemonic: "SKIP_NEQ",
+                implementation: skip_neq_regx_regy,
+            }           
+        },
+        _ => unimplemented!(),
     }
 }
 
 #[inline] pub fn decode_regx_regy_addr4(src: u16) -> Operator {
-    unimplemented!();
     Operator {
-        mnemonic: "TEST",
-        implementation: test
+        mnemonic: "DRAW",
+        implementation: |x, y| draw(x, y),
     }
 }
 
