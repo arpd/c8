@@ -30,7 +30,19 @@ pub fn clear_display(ctxt: &mut Chip8Context) {
 }
 
 pub fn ret(ctxt: &mut Chip8Context) {
-    unimplemented!()
+    let ret_addr = ctxt.cpu.stack.pop();
+    ctxt.cpu.program_counter = ret_addr;
+}
+
+pub fn call_addr12(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
+    if let Operand::Address(addr) = operands[0] {
+        println!("call_addr12(0x{:04x})", addr);
+        let ret_addr = ctxt.cpu.program_counter;
+        ctxt.cpu.stack.push(ret_addr);
+        ctxt.cpu.program_counter = addr;
+    } else {
+        unimplemented!()
+    }
 }
 
 pub fn key_neq(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
@@ -166,9 +178,7 @@ pub fn rand_regx_addr8(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
 pub fn jmp_addr12(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
     unimplemented!()
 }
-pub fn call_addr12(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
-    unimplemented!()
-}
+
 pub fn mov_i_addr12(operands: &Vec<Operand>, ctxt: &mut Chip8Context) {
     unimplemented!()
 }
@@ -180,6 +190,7 @@ pub fn jmp_addr12_offset_regx(operands: &Vec<Operand>, ctxt: &mut Chip8Context) 
 mod tests {
     use platform::{Chip8Context};
     use instruction::{Instruction};
+    use platform::memory::{Addr, STACK_FRAMES};
 
     fn print_mem(ctxt: &Chip8Context, start_addr: u16, num_cells: u16) {
         println!("");
@@ -265,4 +276,62 @@ mod tests {
         }
     }
     
+    fn ret_setup() -> Chip8Context {
+        use std::mem::{size_of};
+        let mut ctxt = Chip8Context::new();
+        let base_addr: Addr = 0xfab0;
+        
+        for i in 0..STACK_FRAMES - 1 {
+            let ret_addr = base_addr + (size_of::<Addr>() * i) as Addr;
+            ctxt.cpu.stack.push(ret_addr);
+        }
+        
+        ctxt
+    }
+
+    #[test]
+    fn ret() {
+        use std::mem::{size_of};
+        let mut ctxt = ret_setup();
+        let base_addr: Addr = 0xfab0;
+
+        let ret_insn = Instruction::new(0x00ee);
+        let operands = ret_insn.operands.clone();
+        let impl_fn = ret_insn.operator.implementation;
+
+        for i in STACK_FRAMES - 1..0 {
+            let ret_addr_expected = base_addr + (size_of::<Addr>() * i) as Addr;
+            impl_fn(&operands, &mut ctxt);
+            let ret_addr = ctxt.cpu.program_counter;
+            assert_eq!(ret_addr, ret_addr_expected);
+        }
+    }
+
+    fn call_addr12_setup() -> Chip8Context {
+        let mut ctxt = Chip8Context::new();
+        
+        ctxt
+    }
+
+    #[test]
+    fn call_addr12() {
+        println!("");
+        use std::mem::{size_of};
+        let mut ctxt = call_addr12_setup();
+        let base_addr: Addr = 0xf00;
+
+        assert_eq!(ctxt.cpu.program_counter, 0);
+
+        for i in 0..STACK_FRAMES - 1 {
+            let addr_to_call = base_addr + (size_of::<Addr>() * i) as Addr;
+            assert!(addr_to_call < 0xfff);
+
+            let call_addr12_insn = Instruction::new(0x2000 | addr_to_call);
+            let operands = call_addr12_insn.operands.clone();
+            let impl_fn = call_addr12_insn.operator.implementation;
+            
+            impl_fn(&operands, &mut ctxt);
+            assert_eq!(ctxt.cpu.program_counter, addr_to_call);
+        }
+    }
 }

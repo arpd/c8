@@ -49,8 +49,8 @@ impl Instruction {
             0 => {
                 if src != 0x00ee && src != 0x00e0 {
                     let mut addr: u16 = get_nibble(src, 0) as u16;
-                    addr |= (get_nibble(src, 1) as u16) << 1;
-                    addr |= (get_nibble(src, 2) as u16) << 2;
+                    addr |= (get_nibble(src, 1) as u16) << 1*4;
+                    addr |= (get_nibble(src, 2) as u16) << 2*4;
                     operands.push(Operand::Address(addr));
                 }
                 decode_special(src)  
@@ -58,8 +58,8 @@ impl Instruction {
             1 | 2 | 0xa | 0xb => {
                 // _NNN
                 let mut addr: u16 = get_nibble(src, 0) as u16;
-                addr |= (get_nibble(src, 1) as u16) << 1;
-                addr |= (get_nibble(src, 2) as u16) << 2;
+                addr |= (get_nibble(src, 1) as u16) << 1*4;
+                addr |= (get_nibble(src, 2) as u16) << 2*4;
                 operands.push(Operand::Address(addr));
                 decode_addr12(src)
             }

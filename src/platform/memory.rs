@@ -1,7 +1,36 @@
-// pub const FRAME_SIZE:   usize = 16;
+use std::mem::{size_of};
+
 pub const STACK_FRAMES: usize = 16;
-pub type Frame = u16;
-pub type Stack = [Frame; STACK_FRAMES];
+pub type Addr = u16;
+
+pub struct Stack {
+    raw: [Addr; STACK_FRAMES],
+    ptr: usize,
+}
+
+impl Stack {
+    pub fn new() -> Stack {
+        Stack {
+            raw: [0; STACK_FRAMES],
+            ptr: 0,
+        }
+    }
+    
+    pub fn pop(&mut self) -> Addr {
+        assert!(self.ptr >= 1);
+        let rv = self.raw[self.ptr as usize];
+        assert_eq!(rv % size_of::<Addr>() as Addr, 0);
+        self.ptr -= 1;
+        rv
+    }
+    
+    pub fn push(&mut self, addr: Addr) {
+        assert!(self.ptr < (STACK_FRAMES - 1));
+        assert_eq!(addr % size_of::<Addr>() as Addr, 0);
+        self.ptr += 1;
+        self.raw[self.ptr as usize] = addr;
+    }
+}
 
 // pub const CELL_SIZE:    usize = 8;
 pub const RAM_CELLS:    usize = 0x1000;
